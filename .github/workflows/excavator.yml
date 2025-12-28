@@ -1,4 +1,5 @@
 name: Excavator
+
 on:
   schedule:
     - cron: '0 * * * *'
@@ -9,7 +10,19 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Excavator
-        uses: ScoopInstaller/Scoop-Action@v4
+
+      - name: Set up Scoop
+        uses: MinoruSekine/setup-scoop@v4
         with:
-          bucket: '.'
+          scoop_update: 'true'
+
+      - name: Update Manifests
+        run: |
+          scoop checkver * -u
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add .
+          if (git status --porcelain) {
+            git commit -m "chore: update manifests"
+            git push
+          }

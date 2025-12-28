@@ -5,6 +5,9 @@ on:
     - cron: '0 * * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   excavator:
     runs-on: windows-latest
@@ -17,12 +20,17 @@ jobs:
           scoop_update: 'true'
 
       - name: Update Manifests
+        shell: pwsh
         run: |
-          scoop checkver * -u
+          # Force load checkver from scoop core
+          . "$(scoop prefix scoop)\current\lib\checkver.ps1"
+          checkver * -u
+
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
           git add .
-          if (git status --porcelain) {
+          $status = git status --porcelain
+          if ($status) {
             git commit -m "chore: update manifests"
             git push
           }

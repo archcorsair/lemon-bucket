@@ -23,13 +23,17 @@ jobs:
         shell: pwsh
         run: |
           $checkver = Join-Path (scoop prefix scoop) "bin\checkver.ps1"
-          
-          # Explicitly tell checkver to look in the 'bucket' directory
           & $checkver * -Dir bucket -u
+
+          # Clean up any side-effect files created by scoop tools
+          if (Test-Path "install.ps1") { Remove-Item "install.ps1" -Force }
 
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
-          git add .
+          
+          # Only add changes within the bucket directory
+          git add bucket/
+          
           if (git status --porcelain) {
             git commit -m "chore: update manifests"
             git push

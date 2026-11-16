@@ -23,7 +23,10 @@ jobs:
         shell: pwsh
         run: |
           $checkver = Join-Path (scoop prefix scoop) "bin\checkver.ps1"
-          & $checkver lemonup -Dir bucket -u
+          # checkver reports problems as ERROR lines but still exits 0, so fail on them here.
+          $output = & $checkver lemonup -Dir bucket -u *>&1 | Out-String
+          Write-Output $output
+          if ($output -match '(?m)^ERROR') { exit 1 }
 
           # Clean up any side-effect files created by scoop tools
           if (Test-Path "install.ps1") { Remove-Item "install.ps1" -Force }
@@ -34,7 +37,10 @@ jobs:
           # Only add manifest changes that belong in this bucket.
           git add bucket/lemonup.json
 
-          if (-not (git diff --cached --quiet --exit-code -- bucket/lemonup.json)) {
+          # git diff --quiet reports through its exit code, not its output.
+          git diff --cached --quiet --exit-code -- bucket/lemonup.json
+          if ($LASTEXITCODE -ne 0) {
             git commit -m "chore: update manifests"
+            git pull --rebase
             git push
           }

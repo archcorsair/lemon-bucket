@@ -16,7 +16,7 @@
         }
     },
     "checkver": {
-        "github": "archcorsair/lemonup"
+        "github": "https://github.com/archcorsair/lemonup"
     },
     "autoupdate": {
         "architecture": {

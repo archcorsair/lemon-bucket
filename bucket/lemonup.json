@@ -1,12 +1,12 @@
 {
-    "version": "2.3.0",
+    "version": "2.4.0",
     "description": "World of Warcraft addon manager built with a Terminal User Interface (TUI).",
     "homepage": "https://github.com/archcorsair/lemonup",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/archcorsair/lemonup/releases/download/v2.3.0/lemonup-windows-x64.exe",
-            "hash": "1c8e90858d629aac17d1aaf3129e571f84758303908d0762b96b41e740feab40",
+            "url": "https://github.com/archcorsair/lemonup/releases/download/v2.4.0/lemonup-windows-x64.exe",
+            "hash": "55d7969a866d1489dae3e2618020d709ee2236404a3b7047909bef15d49da60c",
             "bin": [
                 [
                     "lemonup-windows-x64.exe",
